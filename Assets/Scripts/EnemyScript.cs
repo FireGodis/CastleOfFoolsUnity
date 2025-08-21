@@ -69,6 +69,7 @@ public class EnemyScript : MonoBehaviour
 
     private void Atacar()
     {
+        
         // acessa o script do jogador e tira vida
         CharacterController3D playerScript = player.GetComponent<CharacterController3D>();
         if (playerScript != null)
@@ -97,18 +98,23 @@ public class EnemyScript : MonoBehaviour
     // detecta se o player entrou na área de ataque
     private void OnTriggerEnter(Collider other)
     {
+        
+        
+        
         if (other.CompareTag("Player"))
         {
+            
             playerNaArea = true;
             attackTimer = 0f;
         }
     }
 
-    // detecta se o player saiu da área de ataque
     private void OnTriggerExit(Collider other)
     {
+        
         if (other.CompareTag("Player"))
         {
+            
             playerNaArea = false;
             attackTimer = 0f;
         }

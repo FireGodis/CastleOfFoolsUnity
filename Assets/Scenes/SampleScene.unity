@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 20fca97cf5b8e92459331b3cd74c4be1, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -620,6 +620,7 @@ Transform:
   m_LocalScale: {x: 0.37955442, y: 0.37955442, z: 0.37955442}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2085696419}
   - {fileID: 1006753383}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1616,7 +1617,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d4fbe58298d655f4d971953b2d4fdbc6, type: 2}
+  - {fileID: 2100000, guid: d9d66429d76d45e4588709a0f48707ed, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1676,7 +1677,7 @@ GameObject:
   - component: {fileID: 970331093}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1919,7 +1920,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2085696419}
   - {fileID: 215356456}
   m_Father: {fileID: 306869097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2416,7 +2416,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1385317817}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 0
@@ -3203,11 +3203,11 @@ Transform:
   m_GameObject: {fileID: 2085696418}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.0399998, y: 0.2490002, z: 0}
-  m_LocalScale: {x: 2.1602151, y: 1, z: 1.578}
+  m_LocalPosition: {x: 0.05000011, y: 0.2490002, z: 0}
+  m_LocalScale: {x: 3.6908827, y: 1, z: 1.578}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1006753383}
+  m_Father: {fileID: 306869097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2085696420
 BoxCollider:
