@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class CharacterController3D : MonoBehaviour
@@ -8,6 +10,8 @@ public class CharacterController3D : MonoBehaviour
     public float jumpForce = 7f;
     public float coyoteTime = 0.1f;
     public float jumpBufferTime = 0.1f;
+
+    public float vida = 100; // Valor de vida inicial
 
     private Rigidbody rb;
     private Vector3 moveInput;
@@ -19,6 +23,8 @@ public class CharacterController3D : MonoBehaviour
 
     [Header("Referências")]
     public Animator animator;
+    public Slider mana;
+    public Slider SlidervVida;
     [SerializeField] private Transform spriteHolder;
     [SerializeField] private float flipOffset = 0.5f;
     private bool m_FacingRight = true;
@@ -28,6 +34,8 @@ public class CharacterController3D : MonoBehaviour
     public ParticleSystem corridaParticlePrefab; // prefab do particle system
     private float lastParticleTime = 0f;
     public float particleInterval = 0.1f; // intervalo entre spawns
+
+    
 
     void Start()
     {
@@ -43,14 +51,17 @@ public class CharacterController3D : MonoBehaviour
 
     void Update()
     {
+        SlidervVida.value = vida/100;
+        mana.value += Time.deltaTime * 0.1f; // Regenera mana lentamente
         // Se estiver atacando, trava o movimento e não processa entrada
         if (isAttacking)
         {
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            if (!stateInfo.IsName("Attack"))
+            if (!(stateInfo.IsName("Attack") || stateInfo.IsName("Attack2") || stateInfo.IsName("Special")))
             {
                 isAttacking = false;
             }
+            
             else
             {
                 CancelMovement();
@@ -79,6 +90,15 @@ public class CharacterController3D : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.H))
         {
             StartAttack();
+        }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            StartAttack2();
+        }
+
+        if (Input.GetKeyDown(KeyCode.F) && mana.value == 1)
+        {
+            StartEspecial();
         }
 
         bool correndo = moveInput.sqrMagnitude > 0.01f && isGrounded;
@@ -120,11 +140,38 @@ public class CharacterController3D : MonoBehaviour
         CancelMovement();
         animator.Play("Attack", 0, 0f);
     }
+    private void StartAttack2()
+    {
+        isAttacking = true;
+        CancelMovement();
+        animator.Play("Attack2", 0, 0f);
+    }
+    private void StartEspecial()
+    {
+        isAttacking = true;
+        CancelMovement();
+        ConsumirMana_Especial(1f); // Consome mana ao iniciar o ataque especial
+        mana.value = 0; // Consome mana ao iniciar o ataque especial
+        animator.Play("Special", 0, 0f);
+    }
+
+    private void ConsumirMana_Especial(float quantidade)
+    {
+        if (mana.value >= quantidade)
+        {
+            mana.value -= quantidade;
+        }
+        else
+        {
+            Debug.LogWarning("Mana insuficiente para realizar a ação.");
+        }
+    }
 
     private void CancelMovement()
     {
         rb.linearVelocity = Vector3.zero;
         moveInput = Vector3.zero;
+        
     }
 
     private void Flip()
