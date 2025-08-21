@@ -7,7 +7,7 @@ public class EnemyScript : MonoBehaviour
     public float attackRange = 1.5f; // distância mínima do player
     public float attackDelay = 3f;   // tempo necessário dentro da área para atacar
 
-    private Transform player;
+    public Transform player;
     private Rigidbody rb;
 
     private float attackTimer = 0f;
@@ -26,14 +26,13 @@ public class EnemyScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true; // impede de girar sozinho
 
-        // acha o player pela tag
-        GameObject objPlayer = GameObject.FindGameObjectWithTag("Player");
-        if (objPlayer != null)
-            player = objPlayer.transform;
+       
+        
     }
 
     void Update()
     {
+        
         if (player == null) return;
 
         // calcula direção até o player
