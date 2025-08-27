@@ -25,12 +25,16 @@ public class CharacterController3D : MonoBehaviour
     public Animator animator;
     public Slider mana;
     public Slider SlidervVida;
+    public ParticleSystem slash1;
+    public ParticleSystem slash2;
+    public ParticleSystem specialSlash;
     [SerializeField] private Transform spriteHolder;
     [SerializeField] private float flipOffset = 0.5f;
     private bool m_FacingRight = true;
 
     [Header("Efeito de Corrida")]
     public Transform pe; // ponto onde a partícula será criada
+    public Transform pos_slash; // ponto onde a partícula de ataque será criada
     public ParticleSystem corridaParticlePrefab; // prefab do particle system
     private float lastParticleTime = 0f;
     public float particleInterval = 0.1f; // intervalo entre spawns
@@ -41,12 +45,18 @@ public class CharacterController3D : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        slash1.Stop();
+        slash2.Stop();
+        specialSlash.Stop();
+
 
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
 
         if (spriteHolder == null && animator != null)
             spriteHolder = animator.transform;
+
+
     }
 
     void Update()
@@ -137,12 +147,16 @@ public class CharacterController3D : MonoBehaviour
     private void StartAttack()
     {
         isAttacking = true;
+        
+        slash1.Play();
         CancelMovement();
         animator.Play("Attack", 0, 0f);
+        
     }
     private void StartAttack2()
     {
         isAttacking = true;
+        slash2.Play();
         CancelMovement();
         animator.Play("Attack2", 0, 0f);
     }
@@ -151,6 +165,7 @@ public class CharacterController3D : MonoBehaviour
         isAttacking = true;
         CancelMovement();
         ConsumirMana_Especial(1f); // Consome mana ao iniciar o ataque especial
+        specialSlash.Play();
         mana.value = 0; // Consome mana ao iniciar o ataque especial
         animator.Play("Special", 0, 0f);
     }

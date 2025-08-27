@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
@@ -8,7 +9,9 @@ public class EnemyScript : MonoBehaviour
     public float attackDelay = 3f;   // tempo necessário dentro da área para atacar
 
     public Transform player;
+    public Animator player_animator;
     private Rigidbody rb;
+    public Animator animator; //animator do inimigo
 
     private float attackTimer = 0f;
     private bool playerNaArea = false;
@@ -25,9 +28,10 @@ public class EnemyScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true; // impede de girar sozinho
-
-       
         
+
+
+
     }
 
     void Update()
@@ -38,6 +42,7 @@ public class EnemyScript : MonoBehaviour
         // calcula direção até o player
         Vector3 direction = player.position - transform.position;
         float distance = direction.magnitude;
+        animator.SetBool("estacorrendo", distance > attackRange);
 
         // se estiver longe o suficiente, anda em direção ao player
         if (distance > attackRange)
@@ -53,6 +58,7 @@ public class EnemyScript : MonoBehaviour
         // contador de ataque
         if (playerNaArea)
         {
+            animator.SetBool("estacorrendo", false);
             attackTimer += Time.deltaTime;
 
             if (attackTimer >= attackDelay)
@@ -75,7 +81,11 @@ public class EnemyScript : MonoBehaviour
         if (playerScript != null)
         {
             playerScript.vida -= 10;
+            animator.SetTrigger("attack");
+            player_animator.SetBool("dano", true);
             Debug.Log("Inimigo atacou! Vida do player agora: " + playerScript.vida);
+            StartCoroutine(Tempo_de_dano());
+
         }
     }
 
@@ -93,6 +103,15 @@ public class EnemyScript : MonoBehaviour
             localPos.x = -(Mathf.Abs(localPos.x) - flipOffset);
 
         spriteHolder.localPosition = localPos;
+    }
+
+    private IEnumerator Tempo_de_dano()
+    {
+
+        yield return new WaitForSeconds(1f);  // espera 1 segundos
+
+
+        player_animator.SetBool("dano", false);
     }
 
     // detecta se o player entrou na área de ataque
