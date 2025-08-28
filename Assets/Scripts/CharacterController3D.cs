@@ -161,7 +161,7 @@ public class CharacterController3D : MonoBehaviour
         slash1.Play();
         CancelMovement();
         animator.Play("Attack", 0, 0f);
-        if (pode_atacar_inimigo)
+        if (pode_atacar_inimigo && inimigo.GetComponent<EnemyScript>().morto == false)
         {
             
             inimigo_animator_inimigo .SetTrigger("dano");
@@ -178,7 +178,7 @@ public class CharacterController3D : MonoBehaviour
         slash2.Play();
         CancelMovement();
         animator.Play("Attack2", 0, 0f);
-        if (pode_atacar_inimigo)
+        if (pode_atacar_inimigo && inimigo.GetComponent<EnemyScript>().morto == false)
         {
             
             inimigo_animator_inimigo.SetTrigger("dano");
@@ -194,7 +194,7 @@ public class CharacterController3D : MonoBehaviour
         specialSlash.Play();
         mana.value = 0; // Consome mana ao iniciar o ataque especial
         animator.Play("Special", 0, 0f);
-        if (pode_atacar_inimigo)
+        if (pode_atacar_inimigo && inimigo.GetComponent<EnemyScript>().morto == false)
         {
             
             inimigo_animator_inimigo.SetTrigger("dano");
@@ -260,10 +260,12 @@ public class CharacterController3D : MonoBehaviour
     {
 
         yield return new WaitForSeconds(0.8f);  // espera 1 segundos
-        inimigo_animator_inimigo.SetTrigger("dano");
-        inimigo.GetComponent<EnemyScript>().vidaAtual -= 50;
-
-
+        
+        
+           inimigo_animator_inimigo.SetTrigger("dano");
+           inimigo.GetComponent<EnemyScript>().vidaAtual -= 50;
+        
+        
 
     }
 

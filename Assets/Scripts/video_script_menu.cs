@@ -12,6 +12,7 @@ public class video_script_menu : MonoBehaviour
     public Image fundo2;
     public RawImage tela;
     public Button botao_jogar;
+    public float tempo_video = 1f;
 
     public float fadeDuration = 2f; // tempo do fade em segundos
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -29,16 +30,16 @@ public class video_script_menu : MonoBehaviour
     private IEnumerator Tempo_de_espera()
     {
 
-        yield return new WaitForSeconds(1);  // espera 1 segundos
+        yield return new WaitForSeconds(1 * tempo_video);  // espera 1 segundos
         video_menu.Play();
         audio_menu.Play();
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(5 * tempo_video);
         fundo1.gameObject.SetActive(false);
-        yield return new WaitForSeconds(14);
+        yield return new WaitForSeconds(14 * tempo_video);
         video_menu.Pause();
         tela.gameObject.SetActive(false);
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1 * tempo_video);
         yield return StartCoroutine(FadeOut(fundo2)); // aqui chamamos o fade
         fundo2.gameObject.SetActive(false); // desativa no final
         botao_jogar.interactable = true;

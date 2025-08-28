@@ -23,6 +23,8 @@ public class EnemyScript : MonoBehaviour
     public Slider SliderVidaInimigo;
     public int vidaMaxima = 250;
     public int vidaAtual;
+    public bool morto = false;
+    private bool caindo = false;
 
 
 
@@ -53,27 +55,38 @@ public class EnemyScript : MonoBehaviour
     void Update()
     {
         SliderVidaInimigo.value = vidaAtual;
-
         if (player == null) return;
+        if(vidaAtual <= 0){
+            morto = true; caindo = true;
+        }
+        if (morto == false){
+            // calcula direção até o player
+            Vector3 direction = player.position - transform.position;
+            float distance = direction.magnitude;
+            animator.SetBool("estacorrendo", distance > attackRange);
 
-        // calcula direção até o player
-        Vector3 direction = player.position - transform.position;
-        float distance = direction.magnitude;
-        animator.SetBool("estacorrendo", distance > attackRange);
-
-        // se estiver longe o suficiente, anda em direção ao player
-        if (distance > attackRange)
+            // se estiver longe o suficiente, anda em direção ao player
+            if (distance > attackRange)
+            {
+                Vector3 moveDir = direction.normalized;
+                rb.MovePosition(transform.position + moveDir * moveSpeed * Time.deltaTime);
+            }
+            // flip do sprite (baseado no X do player)
+            if (direction.x > 0 && !m_FacingRight) Flip();
+            else if (direction.x < 0 && m_FacingRight) Flip();
+        } else if(morto == true && vidaAtual <= 0 && caindo == true)
         {
-            Vector3 moveDir = direction.normalized;
-            rb.MovePosition(transform.position + moveDir * moveSpeed * Time.deltaTime);
+            morrer();
+            caindo = false;
         }
 
-        // flip do sprite (baseado no X do player)
-        if (direction.x > 0 && !m_FacingRight) Flip();
-        else if (direction.x < 0 && m_FacingRight) Flip();
+
+
+
+
 
         // contador de ataque
-        if (playerNaArea && !Inimigo_atacado)
+        if (playerNaArea && !Inimigo_atacado && !morto)
         {
             animator.SetBool("estacorrendo", false);
             attackTimer += Time.deltaTime;
@@ -105,6 +118,11 @@ public class EnemyScript : MonoBehaviour
             StartCoroutine(Tempo_de_dano());
 
         }
+    }
+    private void morrer()
+    {
+        animator.SetTrigger("caiu");
+
     }
 
     private void Flip()
