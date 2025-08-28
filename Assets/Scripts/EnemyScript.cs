@@ -1,5 +1,7 @@
+using JetBrains.Annotations;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyScript : MonoBehaviour
 {
@@ -12,9 +14,17 @@ public class EnemyScript : MonoBehaviour
     public Animator player_animator;
     private Rigidbody rb;
     public Animator animator; //animator do inimigo
+    public Material Material_jogador;
 
     private float attackTimer = 0f;
     private bool playerNaArea = false;
+    public bool Inimigo_atacado = false;
+    
+    public Slider SliderVidaInimigo;
+    public int vidaMaxima = 250;
+    public int vidaAtual;
+
+
 
     [Header("Referências")]
     [SerializeField] private Transform spriteHolder;
@@ -28,7 +38,13 @@ public class EnemyScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true; // impede de girar sozinho
-        
+
+        vidaAtual = vidaMaxima;
+
+        // Configura o Slider
+        SliderVidaInimigo.maxValue = vidaMaxima;
+        SliderVidaInimigo.value = vidaAtual;
+
 
 
 
@@ -36,7 +52,8 @@ public class EnemyScript : MonoBehaviour
 
     void Update()
     {
-        
+        SliderVidaInimigo.value = vidaAtual;
+
         if (player == null) return;
 
         // calcula direção até o player
@@ -56,7 +73,7 @@ public class EnemyScript : MonoBehaviour
         else if (direction.x < 0 && m_FacingRight) Flip();
 
         // contador de ataque
-        if (playerNaArea)
+        if (playerNaArea && !Inimigo_atacado)
         {
             animator.SetBool("estacorrendo", false);
             attackTimer += Time.deltaTime;
@@ -83,6 +100,7 @@ public class EnemyScript : MonoBehaviour
             playerScript.vida -= 10;
             animator.SetTrigger("attack");
             player_animator.SetBool("dano", true);
+            Material_jogador.SetColor("_BaseColor", Color.red);
             Debug.Log("Inimigo atacou! Vida do player agora: " + playerScript.vida);
             StartCoroutine(Tempo_de_dano());
 
@@ -107,11 +125,12 @@ public class EnemyScript : MonoBehaviour
 
     private IEnumerator Tempo_de_dano()
     {
-
-        yield return new WaitForSeconds(1f);  // espera 1 segundos
+        
+        yield return new WaitForSeconds(0.5f);  // espera 1 segundos
 
 
         player_animator.SetBool("dano", false);
+        Material_jogador.SetColor("_BaseColor", Color.white);
     }
 
     // detecta se o player entrou na área de ataque
@@ -125,6 +144,8 @@ public class EnemyScript : MonoBehaviour
             
             playerNaArea = true;
             attackTimer = 0f;
+            
+            
         }
     }
 

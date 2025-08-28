@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,6 +33,10 @@ public class CharacterController3D : MonoBehaviour
     [SerializeField] private Transform spriteHolder;
     [SerializeField] private float flipOffset = 0.5f;
     private bool m_FacingRight = true;
+    public GameObject inimigo; // Referência ao inimigo
+    
+    public Animator inimigo_animator_inimigo;
+    private bool pode_atacar_inimigo = false;
 
     [Header("Efeito de Corrida")]
     public Transform pe; // ponto onde a partícula será criada
@@ -48,6 +54,9 @@ public class CharacterController3D : MonoBehaviour
         slash1.Stop();
         slash2.Stop();
         specialSlash.Stop();
+
+        
+
 
 
         if (animator == null)
@@ -146,12 +155,22 @@ public class CharacterController3D : MonoBehaviour
 
     private void StartAttack()
     {
+
         isAttacking = true;
         
         slash1.Play();
         CancelMovement();
         animator.Play("Attack", 0, 0f);
-        
+        if (pode_atacar_inimigo)
+        {
+            
+            inimigo_animator_inimigo .SetTrigger("dano");
+            inimigo.GetComponent<EnemyScript>().vidaAtual -= 10;
+            StartCoroutine(Tempo_de_dano_inimigo());
+        }
+
+
+
     }
     private void StartAttack2()
     {
@@ -159,6 +178,13 @@ public class CharacterController3D : MonoBehaviour
         slash2.Play();
         CancelMovement();
         animator.Play("Attack2", 0, 0f);
+        if (pode_atacar_inimigo)
+        {
+            
+            inimigo_animator_inimigo.SetTrigger("dano");
+            inimigo.GetComponent<EnemyScript>().vidaAtual -= 30;
+            StartCoroutine(Tempo_de_dano_inimigo());
+        }
     }
     private void StartEspecial()
     {
@@ -168,6 +194,16 @@ public class CharacterController3D : MonoBehaviour
         specialSlash.Play();
         mana.value = 0; // Consome mana ao iniciar o ataque especial
         animator.Play("Special", 0, 0f);
+        if (pode_atacar_inimigo)
+        {
+            
+            inimigo_animator_inimigo.SetTrigger("dano");
+            inimigo.GetComponent<EnemyScript>().vidaAtual -= 30;
+            StartCoroutine(Tempo_de_dano_inimigo_especial());
+            
+
+
+        }
     }
 
     private void ConsumirMana_Especial(float quantidade)
@@ -181,6 +217,8 @@ public class CharacterController3D : MonoBehaviour
             Debug.LogWarning("Mana insuficiente para realizar a ação.");
         }
     }
+
+   
 
     private void CancelMovement()
     {
@@ -210,12 +248,38 @@ public class CharacterController3D : MonoBehaviour
         rb.linearVelocity = new Vector3(moveInput.x, rb.linearVelocity.y, moveInput.z);
     }
 
+    private IEnumerator Tempo_de_dano_inimigo()
+    {
+        
+        yield return new WaitForSeconds(0.5f);  // espera 1 segundos
+        
+
+
+    }
+    private IEnumerator Tempo_de_dano_inimigo_especial()
+    {
+
+        yield return new WaitForSeconds(0.8f);  // espera 1 segundos
+        inimigo_animator_inimigo.SetTrigger("dano");
+        inimigo.GetComponent<EnemyScript>().vidaAtual -= 50;
+
+
+
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Chao"))
         {
             isGrounded = true;
             animator.SetBool("estanoar", false);
+        }
+        if (collision.gameObject.CompareTag("Inimigo"))
+        {
+
+            pode_atacar_inimigo = true;
+
+
         }
     }
 
@@ -225,6 +289,13 @@ public class CharacterController3D : MonoBehaviour
         {
             isGrounded = false;
             animator.SetBool("estanoar", true);
+        }
+        if (collision.gameObject.CompareTag("Inimigo"))
+        {
+
+            pode_atacar_inimigo = false;
+
+
         }
     }
 }
