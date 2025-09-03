@@ -36,7 +36,8 @@ public class CharacterController3D : MonoBehaviour
     public GameObject inimigo; // Referência ao inimigo
     
     public Animator inimigo_animator_inimigo;
-    private bool pode_atacar_inimigo = false;
+    public bool pode_atacar_inimigo = false;
+    public GameObject Area_ataque;
 
     [Header("Efeito de Corrida")]
     public Transform pe; // ponto onde a partícula será criada
@@ -108,6 +109,7 @@ public class CharacterController3D : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.H))
         {
+            Debug.Log("valor de poder atacar é: " + pode_atacar_inimigo);
             StartAttack();
         }
         if (Input.GetKeyDown(KeyCode.J))
@@ -276,13 +278,7 @@ public class CharacterController3D : MonoBehaviour
             isGrounded = true;
             animator.SetBool("estanoar", false);
         }
-        if (collision.gameObject.CompareTag("Inimigo"))
-        {
-
-            pode_atacar_inimigo = true;
-
-
-        }
+        
     }
 
     void OnCollisionExit(Collision collision)
@@ -292,12 +288,6 @@ public class CharacterController3D : MonoBehaviour
             isGrounded = false;
             animator.SetBool("estanoar", true);
         }
-        if (collision.gameObject.CompareTag("Inimigo"))
-        {
-
-            pode_atacar_inimigo = false;
-
-
-        }
+        
     }
 }
