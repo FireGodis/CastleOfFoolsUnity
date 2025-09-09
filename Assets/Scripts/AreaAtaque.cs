@@ -1,8 +1,10 @@
+
 using UnityEngine;
 
 public class AreaAtaque : MonoBehaviour
 {
     public CharacterController3D player; // referência ao Player
+    
 
     private void OnTriggerEnter(Collider other)
     {

@@ -99,6 +99,7 @@ public class CharacterController3D : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.G))
             lastJumpPressedTime = Time.time;
+        
 
         if (Time.time - lastJumpPressedTime <= jumpBufferTime &&
             Time.time - lastGroundedTime <= coyoteTime)
@@ -253,9 +254,9 @@ public class CharacterController3D : MonoBehaviour
     private IEnumerator Tempo_de_dano_inimigo()
     {
         
-        yield return new WaitForSeconds(0.5f);  // espera 1 segundos
-        
+        yield return new WaitForSeconds(0.5f);  // espera 0.5 segundos
 
+        
 
     }
     private IEnumerator Tempo_de_dano_inimigo_especial()
