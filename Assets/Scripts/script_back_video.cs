@@ -13,6 +13,8 @@ public class script_back_video : MonoBehaviour
         video_menu.source = VideoSource.Url;
         video_menu.url = Application.streamingAssetsPath + "/background loop BN.mp4";
         video_menu.Play();
+        video_menu.isLooping = false;
+        video_menu.isLooping = true;
 
 
     }

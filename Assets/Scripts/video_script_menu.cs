@@ -8,11 +8,14 @@ using static Unity.VisualScripting.Member;
 public class video_script_menu : MonoBehaviour
 {
     public VideoPlayer video_menu;
+    
     public AudioSource audio_menu;
     public Image fundo1;
     public Image fundo2;
     public RawImage tela;
     public Button botao_jogar;
+    public Button botao_op;
+    public Button botao_sair;
     public float tempo_video = 1f;
 
     public float fadeDuration = 2f; // tempo do fade em segundos
@@ -46,6 +49,8 @@ public class video_script_menu : MonoBehaviour
         yield return StartCoroutine(FadeOut(fundo2)); // aqui chamamos o fade
         fundo2.gameObject.SetActive(false); // desativa no final
         botao_jogar.interactable = true;
+        botao_op.interactable = true;
+        botao_sair.interactable = true;
 
 
 
