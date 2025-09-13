@@ -3,6 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using static Unity.VisualScripting.Member;
 
 public class video_script_menu : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class video_script_menu : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        video_menu.source = VideoSource.Url;
+        video_menu.url = Application.streamingAssetsPath + "/introcastleoffoolscoridiga.mp4";
         StartCoroutine(Tempo_de_espera());
     }
 

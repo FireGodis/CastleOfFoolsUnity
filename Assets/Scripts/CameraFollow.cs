@@ -4,54 +4,61 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-	public float FollowSpeed = 2f;
-	public Transform Target;
+    public float FollowSpeed = 2f;
+    public Transform Target;
 
-	// Transform of the camera to shake. Grabs the gameObject's transform
-	// if null.
-	private Transform camTransform;
+    // Agora CameraY é um bool
+    public bool FollowY = false;
+    public float FixedY = 2f; // posição fixa da câmera no eixo Y quando FollowY = false
 
-	// How long the object should shake for.
-	public float shakeDuration = 0f;
+    // Transform of the camera to shake. Grabs the gameObject's transform
+    // if null.
+    private Transform camTransform;
 
-	// Amplitude of the shake. A larger value shakes the camera harder.
-	public float shakeAmount = 0.1f;
-	public float decreaseFactor = 1.0f;
+    // How long the object should shake for.
+    public float shakeDuration = 0f;
 
-	Vector3 originalPos;
+    // Amplitude of the shake. A larger value shakes the camera harder.
+    public float shakeAmount = 0.1f;
+    public float decreaseFactor = 1.0f;
 
-	void Awake()
-	{
-		Cursor.visible = false;
-		if (camTransform == null)
-		{
-			camTransform = GetComponent(typeof(Transform)) as Transform;
-		}
-	}
+    Vector3 originalPos;
 
-	void OnEnable()
-	{
-		originalPos = camTransform.localPosition;
-	}
+    void Awake()
+    {
+        Cursor.visible = false;
+        if (camTransform == null)
+        {
+            camTransform = GetComponent(typeof(Transform)) as Transform;
+        }
+    }
 
-	private void Update()
-	{
-		Vector3 newPosition = Target.position;
-		newPosition.z = -10;
-        newPosition.y = 2;
+    void OnEnable()
+    {
+        originalPos = camTransform.localPosition;
+    }
+
+    private void Update()
+    {
+        Vector3 newPosition = Target.position;
+        newPosition.z = -10;
+
+        // Se FollowY for true, acompanha o jogador no Y, caso contrário usa valor fixo
+        newPosition.y = FollowY ? Target.position.y : FixedY;
+
         transform.position = Vector3.Slerp(transform.position, newPosition, FollowSpeed * Time.deltaTime);
 
-		if (shakeDuration > 0)
-		{
-			camTransform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;
+        if (shakeDuration > 0)
+        {
+            camTransform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;
 
-			shakeDuration -= Time.deltaTime * decreaseFactor;
-		}
-	}
+            shakeDuration -= Time.deltaTime * decreaseFactor;
+        }
+    }
 
-	public void ShakeCamera()
-	{
-		originalPos = camTransform.localPosition;
-		shakeDuration = 0.2f;
-	}
+    public void ShakeCamera()
+    {
+        originalPos = camTransform.localPosition;
+        shakeDuration = 0.2f;
+    }
 }
