@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -6,7 +7,7 @@ using UnityEngine.Video;
 
 public class script_botoes_menu : MonoBehaviour
 {
-    public Canvas CanvasPlayer;
+    public GameObject CanvasPlayer;
     public Canvas Tela_menu;
     public VideoPlayer video_loading;
     public GameObject loadingImage;
@@ -17,6 +18,7 @@ public class script_botoes_menu : MonoBehaviour
     public AudioSource audio_sonho_intenso;
     public float fadeDuration = 1f;
     public Image preto;
+    public GameObject colisor_dialogo;
     [Header("Cursor personalizado")]
     public Texture2D cursorTexture;   // arraste sua imagem aqui no Inspector
     public Vector2 hotspot = Vector2.zero; // ponto de clique do cursor (0,0 é o canto superior esquerdo)
@@ -29,12 +31,16 @@ public class script_botoes_menu : MonoBehaviour
         video_loading.source = VideoSource.Url;
         video_loading.url = Application.streamingAssetsPath + "/loadingBloodNeon.mp4";
         loadingImage.gameObject.SetActive(false);
+        colisor_dialogo.SetActive(false);
         // Troca o cursor no início do jogo
         if (cursorTexture != null)
         {
             Cursor.SetCursor(cursorTexture, hotspot, CursorMode.Auto);
         }
-
+        audio_sonho.Play();
+        audio_sonho_intenso.Play();
+        audio_sonho.volume = 0;
+        audio_sonho_intenso.volume = 0;
     }
 
     // Update is called once per frame
@@ -61,7 +67,7 @@ public class script_botoes_menu : MonoBehaviour
     private IEnumerator FadeInAudio(AudioSource audio)
     {
         audio.volume = 0f;
-        audio.Play();
+        
         float elapsed = 0f;
 
         while (elapsed < fadeDuration)
@@ -87,7 +93,7 @@ public class script_botoes_menu : MonoBehaviour
         }
 
         audio.volume = 0f; // garante volume zero
-        audio.Stop();
+        
     }
 
     private IEnumerator FadeIn(Image img)
@@ -140,7 +146,7 @@ public class script_botoes_menu : MonoBehaviour
         yield return StartCoroutine(FadeIn(preto));
 
         // Ativa player e teleporta
-        Player.SetActive(true);
+        
         Player.transform.position = teleport1.transform.position;
 
         // Espera 1 segundo (pode trocar por 10 se quiser)
@@ -148,16 +154,27 @@ public class script_botoes_menu : MonoBehaviour
         loadingImage.gameObject.SetActive(true);
         video_loading.Play();
         yield return new WaitForSeconds(7f);
+        Player.SetActive(true);
         loadingImage.gameObject.SetActive(false);
         Tela_menu.gameObject.SetActive(false);
         
         yield return new WaitForSeconds(1f);
+        audio_sonho.Stop();
+        audio_sonho_intenso.Stop();
+        audio_sonho.Play();
+        audio_sonho_intenso.Play();
         fadein_audio(audio_sonho);
         
+        
+
+
+
         // Fade out
         yield return StartCoroutine(FadeOut(preto));
         
         CanvasPlayer.gameObject.SetActive(true);
+        colisor_dialogo.SetActive(true);
+
 
     }
 

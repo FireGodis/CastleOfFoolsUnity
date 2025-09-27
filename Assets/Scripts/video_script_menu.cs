@@ -17,13 +17,14 @@ public class video_script_menu : MonoBehaviour
     public Button botao_op;
     public Button botao_sair;
     public float tempo_video = 1f;
+    public MoverDelorean delorean;
 
     public float fadeDuration = 2f; // tempo do fade em segundos
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         video_menu.source = VideoSource.Url;
-        video_menu.url = Application.streamingAssetsPath + "/introcastleoffoolscoridiga.mp4";
+        video_menu.url = Application.streamingAssetsPath + "/Intrtosuperfoda2semtexto.mp4";
         StartCoroutine(Tempo_de_espera());
     }
 
@@ -39,13 +40,15 @@ public class video_script_menu : MonoBehaviour
         yield return new WaitForSeconds(1 * tempo_video);  // espera 1 segundos
         video_menu.Play();
         audio_menu.Play();
+        
         yield return new WaitForSeconds(5 * tempo_video);
         fundo1.gameObject.SetActive(false);
-        yield return new WaitForSeconds(14 * tempo_video);
+        yield return new WaitForSeconds(5.6f * tempo_video);
         video_menu.Pause();
         tela.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(1 * tempo_video);
+        delorean.MoverParaZero();
         yield return StartCoroutine(FadeOut(fundo2)); // aqui chamamos o fade
         fundo2.gameObject.SetActive(false); // desativa no final
         botao_jogar.interactable = true;

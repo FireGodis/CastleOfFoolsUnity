@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Dialogo_inicial_1
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  dialogueName: AprenderWASD
+  lines:
+  - characterName: ???
+    text: "Ei, voc\xEA a\xED\u2026 acorda! N\xE3o fica parado feito um idiota."
+    portrait: {fileID: 21300000, guid: 5b5ecf97a86e84e4dbd72e73a24f56fb, type: 3}

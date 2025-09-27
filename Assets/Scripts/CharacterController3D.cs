@@ -30,6 +30,9 @@ public class CharacterController3D : MonoBehaviour
     public ParticleSystem slash1;
     public ParticleSystem slash2;
     public ParticleSystem specialSlash;
+
+    public bool pode_mover = true;
+
     [SerializeField] private Transform spriteHolder;
     [SerializeField] private float flipOffset = 0.5f;
     private bool m_FacingRight = true;
@@ -69,12 +72,25 @@ public class CharacterController3D : MonoBehaviour
 
     }
 
+    private Vector3 GetMoveInput()
+    {
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+
+        Vector3 input = new Vector3(moveX, 0f, moveZ);
+
+        // aplica deadzone
+        if (input.magnitude < 0.1f) return Vector3.zero;
+
+        return input.normalized * moveSpeed;
+    }
+
     void Update()
     {
         SlidervVida.value = vida/100;
         mana.value += Time.deltaTime * 0.1f; // Regenera mana lentamente
         // Se estiver atacando, trava o movimento e não processa entrada
-        if (isAttacking)
+        if (isAttacking && pode_mover)
         {
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             if (!(stateInfo.IsName("Attack") || stateInfo.IsName("Attack2") || stateInfo.IsName("Special")))
@@ -89,15 +105,21 @@ public class CharacterController3D : MonoBehaviour
             }
         }
 
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveZ = Input.GetAxisRaw("Vertical");
+        if (!pode_mover)
+        {
+            moveInput = Vector3.zero;
+            CancelMovement();
+        }
+        else
+        {
+            moveInput = GetMoveInput();
+        }
 
-        moveInput = new Vector3(moveX, 0f, moveZ).normalized * moveSpeed;
 
         if (isGrounded)
             lastGroundedTime = Time.time;
 
-        if (Input.GetKeyDown(KeyCode.G))
+        if ((Input.GetKeyDown(KeyCode.G) || Input.GetButtonDown("Fire1")) && pode_mover)
             lastJumpPressedTime = Time.time;
         
 
@@ -108,17 +130,17 @@ public class CharacterController3D : MonoBehaviour
             lastJumpPressedTime = -1;
         }
 
-        if (Input.GetKeyDown(KeyCode.H))
+        if ((Input.GetKeyDown(KeyCode.H) || Input.GetButtonDown("Fire3")) && pode_mover)
         {
             Debug.Log("valor de poder atacar é: " + pode_atacar_inimigo);
             StartAttack();
         }
-        if (Input.GetKeyDown(KeyCode.J))
+        if ((Input.GetKeyDown(KeyCode.J) || Input.GetButtonDown("Jump")) && pode_mover)
         {
             StartAttack2();
         }
 
-        if (Input.GetKeyDown(KeyCode.F) && mana.value == 1)
+        if ((Input.GetKeyDown(KeyCode.F) || Input.GetButtonDown("Fire2")) && mana.value == 1 && pode_mover)
         {
             StartEspecial();
         }
@@ -133,8 +155,8 @@ public class CharacterController3D : MonoBehaviour
             lastParticleTime = Time.time;
         }
 
-        if (moveX > 0 && !m_FacingRight) Flip();
-        else if (moveX < 0 && m_FacingRight) Flip();
+        if (moveInput.x > 0 && !m_FacingRight) Flip();
+        else if (moveInput.x < 0 && m_FacingRight) Flip();
     }
 
     private void CriarParticulaCorrida()
