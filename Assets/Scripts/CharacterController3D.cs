@@ -48,8 +48,14 @@ public class CharacterController3D : MonoBehaviour
     public ParticleSystem corridaParticlePrefab; // prefab do particle system
     private float lastParticleTime = 0f;
     public float particleInterval = 0.1f; // intervalo entre spawns
+    public AudioSource hit1;
+    public AudioSource hit2;
+    public AudioSource hit_especial;
+    public AudioSource pulo;
+    public AudioSource dano;
+    public AudioSource correndo;
 
-    
+
 
     void Start()
     {
@@ -58,8 +64,12 @@ public class CharacterController3D : MonoBehaviour
         slash1.Stop();
         slash2.Stop();
         specialSlash.Stop();
+        correndo.Play();
+        correndo.volume = 0;
+        correndo.loop = true;
 
-        
+
+
 
 
 
@@ -78,6 +88,8 @@ public class CharacterController3D : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");
 
         Vector3 input = new Vector3(moveX, 0f, moveZ);
+
+        correndo.volume = input.magnitude / 3;
 
         // aplica deadzone
         if (input.magnitude < 0.1f) return Vector3.zero;
@@ -171,6 +183,7 @@ public class CharacterController3D : MonoBehaviour
 
     private void Jump()
     {
+        pulo.Play();
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         animator.SetTrigger("estapulando");
@@ -184,6 +197,7 @@ public class CharacterController3D : MonoBehaviour
         isAttacking = true;
         
         slash1.Play();
+        hit1.Play();
         CancelMovement();
         animator.Play("Attack", 0, 0f);
         if (pode_atacar_inimigo && inimigo.GetComponent<EnemyScript>().morto == false)
@@ -201,6 +215,7 @@ public class CharacterController3D : MonoBehaviour
     {
         isAttacking = true;
         slash2.Play();
+        hit2.Play();
         CancelMovement();
         animator.Play("Attack2", 0, 0f);
         if (pode_atacar_inimigo && inimigo.GetComponent<EnemyScript>().morto == false)
@@ -217,6 +232,10 @@ public class CharacterController3D : MonoBehaviour
         CancelMovement();
         ConsumirMana_Especial(1f); // Consome mana ao iniciar o ataque especial
         specialSlash.Play();
+        StartCoroutine(Tempo_de_som_especial());
+
+
+
         mana.value = 0; // Consome mana ao iniciar o ataque especial
         animator.Play("Special", 0, 0f);
         if (pode_atacar_inimigo && inimigo.GetComponent<EnemyScript>().morto == false)
@@ -225,10 +244,11 @@ public class CharacterController3D : MonoBehaviour
             inimigo_animator_inimigo.SetTrigger("dano");
             inimigo.GetComponent<EnemyScript>().vidaAtual -= 30;
             StartCoroutine(Tempo_de_dano_inimigo_especial());
+            StartCoroutine(Tempo_de_som_especial());
             
 
-
         }
+        
     }
 
     private void ConsumirMana_Especial(float quantidade)
@@ -249,7 +269,9 @@ public class CharacterController3D : MonoBehaviour
     {
         rb.linearVelocity = Vector3.zero;
         moveInput = Vector3.zero;
-        
+        correndo.volume = 0;
+
+
     }
 
     private void Flip()
@@ -275,11 +297,14 @@ public class CharacterController3D : MonoBehaviour
 
     private IEnumerator Tempo_de_dano_inimigo()
     {
-        
         yield return new WaitForSeconds(0.5f);  // espera 0.5 segundos
+    }
 
-        
-
+    private IEnumerator Tempo_de_som_especial()
+    {
+        hit2.Play();
+        yield return new WaitForSeconds(0.6f);  // espera 0.5 segundos
+        hit_especial.Play();
     }
     private IEnumerator Tempo_de_dano_inimigo_especial()
     {
@@ -288,6 +313,7 @@ public class CharacterController3D : MonoBehaviour
         
         
            inimigo_animator_inimigo.SetTrigger("dano");
+           
            inimigo.GetComponent<EnemyScript>().vidaAtual -= 50;
         
         

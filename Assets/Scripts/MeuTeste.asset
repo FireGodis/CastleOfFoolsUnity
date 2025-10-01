@@ -17,6 +17,8 @@ MonoBehaviour:
   - characterName: ???
     text: "Hmm\u2026 finalmente se mexeu. Mas n\xE3o pense que isso j\xE1 \xE9 suficiente."
     portrait: {fileID: 21300000, guid: 5b5ecf97a86e84e4dbd72e73a24f56fb, type: 3}
+    voiceClip: {fileID: 8300000, guid: a50ba6f5dadc38a448a762ef560cc42b, type: 3}
   - characterName: ???
     text: "Agora, ataca. Mostre que n\xE3o \xE9 totalmente in\xFAtil."
     portrait: {fileID: 21300000, guid: 5b5ecf97a86e84e4dbd72e73a24f56fb, type: 3}
+    voiceClip: {fileID: 8300000, guid: 42d3f2a14ef7d664f8ebaf5f56fa3fea, type: 3}

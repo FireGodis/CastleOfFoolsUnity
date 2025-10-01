@@ -4,6 +4,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 [System.Serializable]
 public class DialogueLine
@@ -14,6 +15,7 @@ public class DialogueLine
     public string text;
 
     public Sprite portrait;
+    public AudioClip voiceClip; // Se quiser adicionar áudio
 }
 
 [CreateAssetMenu(fileName = "NewDialogue", menuName = "Dialogue/Dialogue")]
@@ -31,7 +33,12 @@ public class DialogueSystem : MonoBehaviour
     public Button nextButton;
     public CharacterController3D player;      // Referência ao jogador para desativar o movimento
     public animacaoUIdireita animaUI; // Referência ao script de animação UI
+    public AudioSource audioSource; // Fonte de áudio para tocar clipes de voz
+    public AudioClip voz_padrao; // Clip de voz padrão, se necessário
+    public botao_opcoes script_op; // Referência ao script de opções para verificar se a dublagem está ativada
+    public GameObject obj_alune1;
 
+    
     public float typeSpeed = 0.03f;
 
     // agora usamos DialogueData (ScriptableObject)
@@ -45,6 +52,7 @@ public class DialogueSystem : MonoBehaviour
 
     void Start()
     {
+        
         if (nextButton != null)
             nextButton.onClick.AddListener(HandleNext); // sem parâmetros
 
@@ -63,6 +71,12 @@ public class DialogueSystem : MonoBehaviour
         currentDialogue = dialogueData;
         lineIndex = 0;
         ShowDialogue();
+        if (currentDialogue != null && currentDialogue.dialogueName == "AprenderWASD")
+        {
+            Debug.Log("Iniciando diálogo inicial 1");
+            
+
+        }
         DisplayNextLine(); // agora DisplayNextLine não precisa de parâmetro
     }
 
@@ -128,6 +142,21 @@ public class DialogueSystem : MonoBehaviour
                 characterPortrait.gameObject.SetActive(false); // oculta se não tiver sprite
             }
 
+            if (line.voiceClip != null && script_op.dublagem)
+            {
+                
+                audioSource.clip = line.voiceClip;
+                audioSource.Play();
+                
+            }
+            else if (!script_op.dublagem)
+            {
+                audioSource.clip = voz_padrao;
+                audioSource.Play();
+                audioSource.volume = 0.5f;
+            }
+
+
             if (typingCoroutine != null)
                 StopCoroutine(typingCoroutine);
 
@@ -150,11 +179,17 @@ public class DialogueSystem : MonoBehaviour
             yield return new WaitForSeconds(typeSpeed);
         }
         isTyping = false;
+        if (!script_op.dublagem)
+        {
+            audioSource.Stop();
+        }
     }
+
+   
 
     void EndDialogue()
     {
-        HideDialogue();
+        
 
         
         if (currentDialogue != null && currentDialogue.dialogueName == "AprenderWASD")
@@ -162,8 +197,19 @@ public class DialogueSystem : MonoBehaviour
             Debug.Log("Diálogo inicial 1 concluído!");
             animaUI.MoverIdaVolta();
         }
-        
+        if (currentDialogue != null && currentDialogue.dialogueName == "Teste")
+        {
+            obj_alune1.GetComponent<SpriteRenderer>().DOColor(Color.red, 1.5f);
+            obj_alune1.transform.DOScaleX(0f, 1.5f); // só eixo X
+            obj_alune1.transform.DOMoveY(1f, 1.5f);
+        }
+        HideDialogue();
+
+
         player.pode_mover = true;
         
     }
+    
+
+    
 }

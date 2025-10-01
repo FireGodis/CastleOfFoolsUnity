@@ -17,3 +17,4 @@ MonoBehaviour:
   - characterName: ???
     text: "Ei, voc\xEA a\xED\u2026 acorda! N\xE3o fica parado feito um idiota."
     portrait: {fileID: 21300000, guid: 5b5ecf97a86e84e4dbd72e73a24f56fb, type: 3}
+    voiceClip: {fileID: 8300000, guid: 706265291e328df40b953fe17a50d6a2, type: 3}

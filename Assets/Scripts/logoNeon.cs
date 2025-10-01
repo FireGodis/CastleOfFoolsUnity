@@ -24,6 +24,10 @@ public class logoNeon : MonoBehaviour
 
         // Troca suave de cor (cinza ↔ branco)
         float t = (Mathf.Sin(Time.time * colorSpeed) + 1f) / 2f;
-        image.color = Color.Lerp(color1, color2, t);
+        if (image != null)
+        {
+            image.color = Color.Lerp(color1, color2, t);
+        }
+            
     }
 }
